@@ -86,8 +86,7 @@ public class EmployeeService {
      */
     public Employee findEmployeeByEmail(String email) {
         try {
-            Optional<Employee> employee = employeeRepository.findByEmail(email);
-            return employee.orElse(null);
+            return employeeRepository.findByEmail(email);
         } catch (Exception e) {
             // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve employee by email", e);

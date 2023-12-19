@@ -1,6 +1,7 @@
 package com.stixis.ems.repository;
 
 import com.stixis.ems.model.Employee;
+import com.stixis.ems.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,9 @@ import java.util.Optional;
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // Find an employee by email
-    Optional<Employee> findByEmail(String email);
+    Employee findByEmail(String email);
+
+    Employee findByRole(Role role);
 
     // Find an employee by first name
     Optional<Employee> findByFirstName(String firstName);
