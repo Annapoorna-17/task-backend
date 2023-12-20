@@ -8,4 +8,8 @@ import org.springframework.stereotype.Service;
 public class DepartmentService {
    @Autowired
     private DepartmentRepository departmentRepository;
+
+    public DepartmentService(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
+    }
 }

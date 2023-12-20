@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
+
 @SpringBootApplication
 public class EmployeeManagementSystemApplication {
 
@@ -25,8 +27,9 @@ public class EmployeeManagementSystemApplication {
 
             admin.setFirstName("Arunachalam");
             admin.setLastName("Rajkumar");
-            admin.setEmail("r.arunachalam@gmail.com");
-            admin.setPassword(passwordEncode.encode("Stixis@123"));
+            admin.setEmail("r.arunachalam99@gmail.com");
+            admin.setMobileNumber(8884481250L);
+            admin.setPassword(passwordEncode.encode("123456"));
             admin.setRole(Role.ADMIN);
 
             userDao.save(admin);

@@ -1,6 +1,8 @@
 package com.stixis.ems.controller;
 
+import com.stixis.ems.dao.TokenRepository;
 import com.stixis.ems.model.Employee;
+import com.stixis.ems.model.Token;
 import com.stixis.ems.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("api")
@@ -17,6 +20,8 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
+
+
 
     // Endpoint to register a new employee
 //    @PostMapping("/employee")
@@ -106,7 +111,7 @@ public class EmployeeController {
     @DeleteMapping("/employee/delete/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         try {
-            employeeService.deleleEmployee(id);
+           employeeService.deleleEmployee(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             // Handle exceptions and return an appropriate HTTP status

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.annotations.Cascade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @Entity
 public class Employee implements UserDetails {
 
@@ -28,7 +31,7 @@ public class Employee implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
 
-       private String firstName;
+    private String firstName;
 
     private String lastName;
 
