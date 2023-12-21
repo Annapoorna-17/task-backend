@@ -41,6 +41,9 @@ public class Employee implements UserDetails {
 
     private Long mobileNumber;
 
+    @Lob
+    private byte[] photo;
+
     @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
     private LocalDate dateOfBirth;
 
@@ -50,7 +53,7 @@ public class Employee implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee" ,fetch=FetchType.EAGER)
     private Set<Token> tokens;
 
     @ManyToOne

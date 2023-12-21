@@ -21,7 +21,7 @@ public class EmployeeManagementSystemApplication {
     @Bean
     CommandLineRunner run(EmployeeRepository userDao, PasswordEncoder passwordEncode){
         return args ->{
-            if(userDao.findByRole(Role.ADMIN)!=null) return;
+            if(!userDao.findByRole(Role.ADMIN).isEmpty()) return;
 
             Employee admin = new Employee();
 

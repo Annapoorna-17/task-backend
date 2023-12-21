@@ -16,6 +16,7 @@ public class RegisterRequest {
 	private String lastName;
 	private String email;
 	private String password;
+	private byte[] photo;
 	private Long mobileNumber;
 	private LocalDate dateOfJoining;
 	private LocalDate dateOfBirth;
