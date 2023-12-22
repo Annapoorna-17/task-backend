@@ -109,10 +109,10 @@ public class EmployeeController {
 
     // Endpoint to delete an employee by ID
     @DeleteMapping("/employee/delete/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    public ResponseEntity<Employee> deleteEmployee(@PathVariable Long id) {
         try {
-           employeeService.deleleEmployee(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+           Employee deleted=employeeService.deleleEmployee(id);
+            return new ResponseEntity<>(deleted,HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             // Handle exceptions and return an appropriate HTTP status
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

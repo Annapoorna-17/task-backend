@@ -29,7 +29,10 @@ public class EmployeeManagementSystemApplication {
             admin.setLastName("Rajkumar");
             admin.setEmail("r.arunachalam99@gmail.com");
             admin.setMobileNumber(8884481250L);
+            admin.setDateOfBirth(LocalDate.of(1999,11,22));
+            admin.setDateOfJoining(LocalDate.of(2023,12,4));
             admin.setPassword(passwordEncode.encode("123456"));
+            admin.setPhoto(null);
             admin.setRole(Role.ADMIN);
 
             userDao.save(admin);

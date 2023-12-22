@@ -51,6 +51,7 @@ class EmployeeRepositoryTest {
                 .password("123456")
                 .role(USER)
                 .tokens(null)
+                .photo(null)
                 .dateOfBirth(LocalDate.of(1999, 11, 22))
                 .dateOfJoining(LocalDate.of(2023, 12, 15))
                 .mobileNumber(8884481250L).build();
@@ -62,6 +63,7 @@ class EmployeeRepositoryTest {
                 .password("123456")
                 .role(ADMIN)
                 .tokens(null)
+                .photo(null)
                 .dateOfBirth(LocalDate.of(1989, 11, 12))
                 .dateOfJoining(LocalDate.of(2023, 12, 20))
                 .mobileNumber(7775481250L).build();

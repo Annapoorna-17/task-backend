@@ -17,13 +17,15 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private TokenRepository tokenRepository;
+
     public EmployeeService(EmployeeRepository employeeRepository,TokenRepository tokenRepository) {
         this.employeeRepository = employeeRepository;
         this.tokenRepository=tokenRepository;
     }
 
-    @Autowired
-    private TokenRepository tokenRepository;
+
 
     /**
      * Add a new employee.
@@ -35,7 +37,7 @@ public class EmployeeService {
         try {
             return employeeRepository.save(employee);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
+            e.printStackTrace();
             throw new RuntimeException("Failed to add employee", e);
         }
     }

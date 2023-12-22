@@ -39,7 +39,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestParam("file") MultipartFile file, @RequestBody RegisterRequest request){
+	public ResponseEntity<?> register(@RequestPart("file") MultipartFile file, @RequestPart RegisterRequest request){
 		try{
 			request.setPhoto(file.getBytes());
 			return ResponseEntity.ok(userService.register(request));

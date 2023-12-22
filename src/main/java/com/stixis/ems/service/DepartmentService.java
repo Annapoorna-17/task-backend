@@ -1,8 +1,11 @@
 package com.stixis.ems.service;
 
+import com.stixis.ems.model.Department;
 import com.stixis.ems.repository.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class DepartmentService {
@@ -11,5 +14,9 @@ public class DepartmentService {
 
     public DepartmentService(DepartmentRepository departmentRepository) {
         this.departmentRepository = departmentRepository;
+    }
+
+    public List<Department> getAllDepartment(){
+        return departmentRepository.findAll();
     }
 }
