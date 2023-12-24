@@ -1,6 +1,7 @@
 package com.stixis.ems.security;
 
 
+import com.stixis.ems.model.Employee;
 import com.stixis.ems.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +30,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class AppSecurityConfig {
     @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
+
+
 
     @Autowired
     LogoutHandler logoutHandler;
@@ -48,7 +53,7 @@ public class AppSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
+    public static AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
@@ -69,6 +74,8 @@ public class AppSecurityConfig {
                         .logoutSuccessHandler(((request, response, authentication) -> SecurityContextHolder.clearContext())));
         return http.build();
     }
+
+
 
 
 }

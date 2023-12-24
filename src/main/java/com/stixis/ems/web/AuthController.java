@@ -15,6 +15,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,15 +39,18 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestBody RegisterRequest request){
+	public ResponseEntity<?> register(@RequestPart("file") MultipartFile file, @RequestPart RegisterRequest request){
 		try{
+			request.setPhoto(file.getBytes());
 			return ResponseEntity.ok(userService.register(request));
 		}catch (DuplicateEmailException e){
 			Map<String, String> response = new HashMap<>();
 			response.put("message", e.getMessage());
 			return ResponseEntity.badRequest().body(response);
-		}
-	}
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody AutRequest request){
@@ -105,14 +109,13 @@ public class AuthController {
 
 	private static String createEmailContent(Employee user, String resetLink) {
 
-		String emailContent = "<p>Hi " + user.getLastName()+" "+ user.getFirstName()+"</p>"+
+        return "<p>Hi " + user.getLastName()+" "+ user.getFirstName()+"</p>"+
 				"<p>We received a request to reset your password." +
 				" If you did not initiate this request, please ignore this email</p>" +
 				"<p>To reset your password, click on the link below:</p> <a href=\"" +
 				resetLink + "\"> Reset Password</a>" +
 				" this link is available just for 15min"+
 				"<p>Thank you,<br> Email test Team</p>";
-		return emailContent;
 
 	}
 

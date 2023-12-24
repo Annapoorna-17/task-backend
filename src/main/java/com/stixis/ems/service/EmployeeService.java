@@ -1,7 +1,9 @@
 package com.stixis.ems.service;
 
+import com.stixis.ems.dao.TokenRepository;
 import com.stixis.ems.model.Employee;
 import com.stixis.ems.repository.EmployeeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,16 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private TokenRepository tokenRepository;
+
+    public EmployeeService(EmployeeRepository employeeRepository,TokenRepository tokenRepository) {
+        this.employeeRepository = employeeRepository;
+        this.tokenRepository=tokenRepository;
+    }
+
+
+
     /**
      * Add a new employee.
      *
@@ -25,7 +37,7 @@ public class EmployeeService {
         try {
             return employeeRepository.save(employee);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
+            e.printStackTrace();
             throw new RuntimeException("Failed to add employee", e);
         }
     }
@@ -133,10 +145,12 @@ public class EmployeeService {
      * @param id The ID of the employee to be deleted.
      * @return The deleted employee.
      */
+    @Transactional
     public Employee deleleEmployee(Long id) {
         try {
             Employee deleted = findEmployeeById(id);
             if (deleted != null) {
+                tokenRepository.deleteByEmployee_EmployeeId(id);
                 employeeRepository.deleteById(id);
                 return deleted;
             } else {

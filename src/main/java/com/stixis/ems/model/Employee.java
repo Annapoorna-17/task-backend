@@ -1,19 +1,16 @@
 package com.stixis.ems.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 @Entity
 public class Employee implements UserDetails {
 
@@ -28,7 +26,7 @@ public class Employee implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
 
-       private String firstName;
+    private String firstName;
 
     private String lastName;
 
@@ -38,16 +36,18 @@ public class Employee implements UserDetails {
 
     private Long mobileNumber;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+    private byte[] photo;
+
+    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
     private LocalDate dateOfBirth;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
     private LocalDate dateOfJoining;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "employee")
+    @OneToMany(mappedBy = "employee" ,fetch=FetchType.EAGER)
     private Set<Token> tokens;
 
     @ManyToOne
@@ -82,5 +82,29 @@ public class Employee implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+
+    @Override
+    public String toString() {
+        return String.format(
+                "{\"employeeId\": %d,\"firstName\": \"%s\",\"lastName\": \"%s\",\"email\": \"%s\",\"password\": \"%s\",\"mobileNumber\": %d,\"photo\": %s,\"dateOfBirth\": \"%s\",\"dateOfJoining\": \"%s\",\"role\": \"%s\",\"tokens\": %s,\"department\": %s}",
+                employeeId,
+                escapeJson(firstName),
+                escapeJson(lastName),
+                escapeJson(email),
+                escapeJson(password),
+                mobileNumber,
+                escapeJson(Arrays.toString(photo)),
+                dateOfBirth,
+                dateOfJoining,
+                escapeJson(role.name()),
+                tokens,
+                department
+        );
+    }
+
+    private String escapeJson(String input) {
+        return Objects.isNull(input) ? "" : input.replace("\"", "\\\"");
     }
 }

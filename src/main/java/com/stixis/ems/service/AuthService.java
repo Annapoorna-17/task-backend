@@ -56,15 +56,15 @@ public class AuthService implements IAuthService{
 
 
     private void revokeUserToken(Employee user){
-        Set<Token> valideTokens = tokenDao.findValidTokenByUser(user.getEmployeeId());
-        if(valideTokens.isEmpty()){
+        Set<Token> validTokens = tokenDao.findValidTokenByUser(user.getEmployeeId());
+        if(validTokens.isEmpty()){
             return;
         }
-        valideTokens.forEach(token->{
+        validTokens.forEach(token->{
             token.setRevoked(true);
             token.setExpired(true);
         });
-        tokenDao.saveAll(valideTokens);
+        tokenDao.saveAll(validTokens);
     }
 
     private void saveUserToken(Employee employee, String jwtToken) {
@@ -83,9 +83,11 @@ public class AuthService implements IAuthService{
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
+        user.setMobileNumber(request.getMobileNumber());
         user.setDateOfBirth(request.getDateOfBirth());
         user.setDateOfJoining(request.getDateOfJoining());
         user.setDepartment(request.getDepartment());
+        user.setPhoto(request.getPhoto());
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(Role.USER);
