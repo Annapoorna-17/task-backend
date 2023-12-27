@@ -61,8 +61,7 @@ public class AppSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req->req
-                .requestMatchers("/api/auth/**","/api/department")
-                .permitAll()
+                .requestMatchers("/api/auth/**","/api/auth/forgotpassword","/api/department").permitAll()
                 .requestMatchers("/api/employee/**","/api/employee").hasAnyAuthority(Role.ADMIN.name())
                 .requestMatchers("/api/employee/**","/api/employee").hasAnyAuthority(Role.USER.name())
                 .anyRequest()

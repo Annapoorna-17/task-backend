@@ -22,7 +22,6 @@ public class RegisterRequest {
 
 	private String password;
 
-	@Lob
 	private byte[] photo;
 
 	private Long mobileNumber;

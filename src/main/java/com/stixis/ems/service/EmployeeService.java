@@ -53,7 +53,6 @@ public class EmployeeService {
             Optional<Employee> employee = employeeRepository.findById(id);
             return employee.orElse(null);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve employee by ID", e);
         }
     }
@@ -69,7 +68,6 @@ public class EmployeeService {
             Optional<Employee> employee = employeeRepository.findByFirstName(firstName);
             return employee.orElse(null);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve employee by first name", e);
         }
     }
@@ -85,7 +83,6 @@ public class EmployeeService {
             Optional<Employee> employee = employeeRepository.findByLastName(lastName);
             return employee.orElse(null);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve employee by last name", e);
         }
     }
@@ -100,7 +97,6 @@ public class EmployeeService {
         try {
             return employeeRepository.findByEmail(email);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve employee by email", e);
         }
     }
@@ -114,7 +110,6 @@ public class EmployeeService {
         try {
             return employeeRepository.findAll();
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve all employees", e);
         }
     }
@@ -134,7 +129,6 @@ public class EmployeeService {
                 throw new RuntimeException("Employee not found for updating");
             }
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to update employee", e);
         }
     }
@@ -157,7 +151,6 @@ public class EmployeeService {
                 throw new RuntimeException("Employee not found for deletion");
             }
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to delete employee", e);
         }
     }
@@ -172,7 +165,6 @@ public class EmployeeService {
         try {
             return employeeRepository.findAllByDateOfJoining(dateOfJoining);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve employees by date of joining", e);
         }
     }
@@ -188,7 +180,6 @@ public class EmployeeService {
         try {
             return employeeRepository.findAllByDateOfJoiningBetween(startDate, endDate);
         } catch (Exception e) {
-            // Log the exception or handle it appropriately
             throw new RuntimeException("Failed to retrieve employees by date of joining between", e);
         }
     }

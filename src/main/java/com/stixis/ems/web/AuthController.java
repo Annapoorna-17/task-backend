@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -38,14 +39,15 @@ public class AuthController {
 		return ResponseEntity.ok("hello");
 	}
 
-	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestPart("file") MultipartFile file, @RequestPart RegisterRequest request){
+	@PostMapping(value="/register",consumes={MediaType.MULTIPART_FORM_DATA_VALUE})
+	public ResponseEntity<?> register(@RequestPart("request") RegisterRequest request,@RequestPart("photo") MultipartFile photo){
 		try{
-			request.setPhoto(file.getBytes());
+			request.setPhoto(photo.getBytes());
 			return ResponseEntity.ok(userService.register(request));
 		}catch (DuplicateEmailException e){
 			Map<String, String> response = new HashMap<>();
 			response.put("message", e.getMessage());
+			System.out.println();
 			return ResponseEntity.badRequest().body(response);
 		} catch (IOException e) {
             throw new RuntimeException(e);
@@ -72,7 +74,7 @@ public class AuthController {
 
 	}
 
-	@PostMapping("/forgotPassword")
+	@PostMapping("/forgotpassword")
 	public ResponseEntity<?> forgotPassword(@RequestParam String email) throws MessagingException {
 		Employee user = userService.getUserByEmail(email);
 		System.out.println(user);
@@ -81,7 +83,7 @@ public class AuthController {
 		if(user!=null){
 			String jwtToken = userService.generatePasswordResetToken(user);
 
-			String resetLink = "http://localhost:3050/api/auth/resetPassword?token=" + jwtToken;
+			String resetLink = "http://localhost:4200/api/auth/resetPassword?token=" + jwtToken;
 
 
 			String emailContent = createEmailContent(user, resetLink);

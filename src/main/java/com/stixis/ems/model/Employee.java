@@ -84,27 +84,44 @@ public class Employee implements UserDetails {
         return true;
     }
 
-
     @Override
     public String toString() {
-        return String.format(
-                "{\"employeeId\": %d,\"firstName\": \"%s\",\"lastName\": \"%s\",\"email\": \"%s\",\"password\": \"%s\",\"mobileNumber\": %d,\"photo\": %s,\"dateOfBirth\": \"%s\",\"dateOfJoining\": \"%s\",\"role\": \"%s\",\"tokens\": %s,\"department\": %s}",
-                employeeId,
-                escapeJson(firstName),
-                escapeJson(lastName),
-                escapeJson(email),
-                escapeJson(password),
-                mobileNumber,
-                escapeJson(Arrays.toString(photo)),
-                dateOfBirth,
-                dateOfJoining,
-                escapeJson(role.name()),
-                tokens,
-                department
-        );
+        return "Employee{" +
+                "employeeId=" + employeeId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", mobileNumber=" + mobileNumber +
+                ", photo=" + Arrays.toString(photo) +
+                ", dateOfBirth=" + dateOfBirth +
+                ", dateOfJoining=" + dateOfJoining +
+                ", role=" + role +
+                ", tokens=" + tokens +
+                ", department=" + department +
+                '}';
     }
 
-    private String escapeJson(String input) {
-        return Objects.isNull(input) ? "" : input.replace("\"", "\\\"");
-    }
+//    @Override
+//    public String toString() {
+//        return String.format(
+//                "{\"employeeId\": %d,\"firstName\": \"%s\",\"lastName\": \"%s\",\"email\": \"%s\",\"password\": \"%s\",\"mobileNumber\": %d,\"photo\": %s,\"dateOfBirth\": \"%s\",\"dateOfJoining\": \"%s\",\"role\": \"%s\",\"tokens\": %s,\"department\": %s}",
+//                employeeId,
+//                escapeJson(firstName),
+//                escapeJson(lastName),
+//                escapeJson(email),
+//                escapeJson(password),
+//                mobileNumber,
+//                escapeJson(Arrays.toString(photo)),
+//                dateOfBirth,
+//                dateOfJoining,
+//                escapeJson(role.name()),
+//                tokens,
+//                department
+//        );
+//    }
+//
+//    private String escapeJson(String input) {
+//        return Objects.isNull(input) ? "" : input.replace("\"", "\\\"");
+//    }
 }
