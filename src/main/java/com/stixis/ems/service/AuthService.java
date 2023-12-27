@@ -106,7 +106,7 @@ public class AuthService implements IAuthService{
             revokeUserToken(user);
             saveUserToken(newUser, jwtToken);
 
-            return new AuthResponse(jwtToken,refreshToken);
+            return new AuthResponse(user.getFirstName(),jwtToken,refreshToken);
         }catch (DataIntegrityViolationException e){
             throw new DuplicateEmailException("Email "+request.getEmail()+" already exists!");
         }
@@ -128,7 +128,7 @@ public class AuthService implements IAuthService{
             revokeUserToken(user);
             saveUserToken(user,jwtToken);
 
-            return new AuthResponse(jwtToken,refreshToken);
+            return new AuthResponse(user.getFirstName(),jwtToken,refreshToken);
         }catch (BadCredentialsException e){
             throw new BadCredentialsException("Invalid email or password!");
         }

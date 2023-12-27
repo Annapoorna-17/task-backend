@@ -38,6 +38,21 @@ public class Employee implements UserDetails {
 
     private byte[] photo;
 
+    public String getImageDataAsBase64() {
+        if (this.photo != null) {
+            return Base64.getEncoder().encodeToString(photo);
+        }
+        return null;
+    }
+
+    public void setImageDataAsBase64(String base64ImageData) {
+        if (base64ImageData != null) {
+            this.photo = Base64.getDecoder().decode(base64ImageData);
+        } else {
+            this.photo = null;
+        }
+    }
+
     @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
     private LocalDate dateOfBirth;
 

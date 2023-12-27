@@ -42,7 +42,7 @@ public class EmployeeController {
             List<Employee> list = employeeService.getAllEmployees();
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception e) {
-            // Handle exceptions and return an appropriate HTTP status
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

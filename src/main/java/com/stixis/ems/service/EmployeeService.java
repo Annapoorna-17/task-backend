@@ -4,12 +4,17 @@ import com.stixis.ems.dao.TokenRepository;
 import com.stixis.ems.model.Employee;
 import com.stixis.ems.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import static org.apache.tomcat.util.codec.binary.Base64.*;
 
 @Service
 public class EmployeeService {
@@ -108,7 +113,13 @@ public class EmployeeService {
      */
     public List<Employee> getAllEmployees() {
         try {
-            return employeeRepository.findAll();
+            List<Employee> employees = employeeRepository.findAll();
+            employees.forEach(employee -> {
+                if (employee.getPhoto() != null) {
+                    employee.setImageDataAsBase64(java.util.Base64.getEncoder().encodeToString(employee.getPhoto()));
+                }
+            });
+            return employees;
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve all employees", e);
         }

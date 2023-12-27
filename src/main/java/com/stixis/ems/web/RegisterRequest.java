@@ -2,7 +2,6 @@ package com.stixis.ems.web;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.stixis.ems.model.Department;
-import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
