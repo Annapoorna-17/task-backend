@@ -63,6 +63,25 @@ public class EmployeeService {
     }
 
     /**
+     * Get List of employees by Department ID.
+     *
+     * @param id The ID of the department to retrieve.
+     * @return The List of employees with the specified Department ID.
+     */
+    public List<Employee> findEmployeeByDepartmentId(Long id){
+        try {
+            List<Employee> employees = employeeRepository.findByDepartment_DepartmentId(id);
+            employees.forEach(employee -> {
+                if (employee.getPhoto() != null) {
+                    employee.setImageDataAsBase64(java.util.Base64.getEncoder().encodeToString(employee.getPhoto()));
+                }
+            });
+            return employees;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve all employees", e);
+        }
+    }
+    /**
      * Get an employee by first name.
      *
      * @param firstName The first name of the employee to retrieve.

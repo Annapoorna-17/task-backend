@@ -47,6 +47,17 @@ public class EmployeeController {
         }
     }
 
+    @GetMapping("/employee/department/{id}")
+    public ResponseEntity<List<Employee>> getAllEmployeesByDepartment(@PathVariable Long id) {
+        try {
+            List<Employee> list = employeeService.findEmployeeByDepartmentId(id);
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // Endpoint to retrieve an employee by ID
     @GetMapping("/employee/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
