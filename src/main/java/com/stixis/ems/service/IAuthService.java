@@ -16,7 +16,7 @@ public interface IAuthService {
 
     Employee getUserByEmail(String email);
     List<Employee> getUsers();
-    AuthResponse register(RegisterRequest request);
+    Employee register(RegisterRequest request);
 
     AuthResponse authenticate(AutRequest request);
 

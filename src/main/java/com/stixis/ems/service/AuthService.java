@@ -95,18 +95,18 @@ public class AuthService implements IAuthService{
     }
 
     @Override
-    public AuthResponse register(RegisterRequest request) {
+    public Employee register(RegisterRequest request) {
 
         Employee user = createUser(request);
+
         try{
             Employee newUser = userDao.save(user);
             String jwtToken = jwtUtil.generateToken(user);
             String refreshToken = jwtUtil.generateRefreshToken(user);
-
             revokeUserToken(user);
             saveUserToken(newUser, jwtToken);
 
-            return new AuthResponse(user.getFirstName(),jwtToken,refreshToken);
+            return newUser;
         }catch (DataIntegrityViolationException e){
             throw new DuplicateEmailException("Email "+request.getEmail()+" already exists!");
         }

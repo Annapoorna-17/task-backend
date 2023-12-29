@@ -62,8 +62,7 @@ public class AppSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req->req
                 .requestMatchers("/api/auth/**","/api/department").permitAll()
-                .requestMatchers("/api/employee/**","/api/employee").hasAnyAuthority(Role.ADMIN.name())
-                .requestMatchers("/api/employee/**","/api/employee").hasAnyAuthority(Role.USER.name())
+                .requestMatchers("/api/employee/**","/api/employee").hasAnyAuthority(Role.ADMIN.name(),Role.USER.name())
                 .anyRequest()
                 .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
