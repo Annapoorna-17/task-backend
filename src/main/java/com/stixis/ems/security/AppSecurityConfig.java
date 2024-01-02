@@ -31,8 +31,6 @@ public class AppSecurityConfig {
     @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
-
-
     @Autowired
     LogoutHandler logoutHandler;
 

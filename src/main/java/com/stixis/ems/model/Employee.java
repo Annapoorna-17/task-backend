@@ -38,6 +38,8 @@ public class Employee implements UserDetails {
 
     private byte[] photo;
 
+    private boolean active;
+
     public String getImageDataAsBase64() {
         if (this.photo != null) {
             return Base64.getEncoder().encodeToString(photo);
@@ -53,10 +55,10 @@ public class Employee implements UserDetails {
         }
     }
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
+    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
     private LocalDate dateOfBirth;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "yyyy/MM/dd")
+    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
     private LocalDate dateOfJoining;
 
     @Enumerated(EnumType.STRING)

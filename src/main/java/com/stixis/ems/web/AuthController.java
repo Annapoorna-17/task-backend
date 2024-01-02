@@ -93,6 +93,11 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(){
+       return ResponseEntity.ok("Logged out Successfully!!");
+    }
+
     @PostMapping("/refreshToken")
     public void refreshToken(
             HttpServletRequest request,
