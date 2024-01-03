@@ -38,7 +38,7 @@ public class Employee implements UserDetails {
 
     private byte[] photo;
 
-    private boolean active;
+    private boolean deleted = false;
 
     public String getImageDataAsBase64() {
         if (this.photo != null) {
@@ -55,10 +55,10 @@ public class Employee implements UserDetails {
         }
     }
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "MM/dd/yyyy")
     private LocalDate dateOfBirth;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "MM/dd/yyyy")
     private LocalDate dateOfJoining;
 
     @Enumerated(EnumType.STRING)
@@ -98,7 +98,7 @@ public class Employee implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !deleted;
     }
 
     @Override

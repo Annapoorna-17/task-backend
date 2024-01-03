@@ -174,8 +174,8 @@ public class EmployeeService {
         try {
             Employee deleted = findEmployeeById(id);
             if (deleted != null) {
-                tokenRepository.deleteByEmployee_EmployeeId(id);
-                employeeRepository.deleteById(id);
+//                tokenRepository.deleteByEmployee_EmployeeId(id);
+                deleted.setDeleted(true);
                 return deleted;
             } else {
                 throw new RuntimeException("Employee not found for deletion");
