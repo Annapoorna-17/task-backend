@@ -100,15 +100,19 @@ public class AuthService implements IAuthService{
         Employee user = createUser(request);
 
         try{
+            if(userDao.findByEmail(user.getEmail())!=null){
+                throw new DuplicateEmailException("USER WITH EMAIL"+user.getEmail()+"ALREADY EXISTS");
+            }
             Employee newUser = userDao.save(user);
             String jwtToken = jwtUtil.generateToken(user);
             String refreshToken = jwtUtil.generateRefreshToken(user);
             revokeUserToken(user);
             saveUserToken(newUser, jwtToken);
-
             return newUser;
-        }catch (DataIntegrityViolationException e){
-            throw new DuplicateEmailException("Email "+request.getEmail()+" already exists!");
+        }catch (DuplicateEmailException e)
+        {
+            System.out.println("Duplicate email");
+            return null;
         }
     }
 

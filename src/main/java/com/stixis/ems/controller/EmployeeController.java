@@ -1,16 +1,25 @@
 package com.stixis.ems.controller;
 
 import com.stixis.ems.dao.TokenRepository;
+import com.stixis.ems.helper.ExcelHelper;
 import com.stixis.ems.model.Employee;
 import com.stixis.ems.model.Token;
 import com.stixis.ems.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -153,5 +162,35 @@ public class EmployeeController {
             // Handle exceptions and return an appropriate HTTP status
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @PostMapping("/employee/upload")
+    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file){
+        if(ExcelHelper.checkExcelFormat(file)){
+            this.employeeService.save(file);
+            return ResponseEntity.ok(Map.of("message","File is uploaded and the data is stored in Database"));
+
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please Upload Excel File only");
+
+    }
+
+//    @GetMapping("/employee")
+//    public List<Employee> getAllEmployees(){
+//        return this.employeeService.getAllEmployees();
+//    }
+
+    @RequestMapping("/employee/excel")
+    public ResponseEntity<Resource> downloadExcelSheet() throws IOException {
+        String fileName ="employeesData.xlsx";
+        ByteArrayInputStream actualData=employeeService.getExcelSheet();
+
+        InputStreamResource file=new InputStreamResource(actualData);
+
+        ResponseEntity<Resource> body =ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+fileName)
+                .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                .body(file);
+        return body;
     }
 }

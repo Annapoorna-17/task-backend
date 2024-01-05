@@ -1,15 +1,20 @@
 package com.stixis.ems.service;
 
 import com.stixis.ems.dao.TokenRepository;
+import com.stixis.ems.helper.ExcelHelper;
 import com.stixis.ems.model.Employee;
+import com.stixis.ems.repository.DepartmentRepository;
 import com.stixis.ems.repository.EmployeeRepository;
 import jakarta.transaction.Transactional;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
-
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +26,12 @@ public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -212,5 +223,25 @@ public class EmployeeService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve employees by date of joining between", e);
         }
+    }
+
+    public void save(MultipartFile file) {
+        try{
+            List<Employee> list = ExcelHelper.convertExcelToList(file.getInputStream(),departmentRepository);
+            list.forEach(employee -> {
+                String encodedPassword= passwordEncoder.encode(employee.getPassword());
+                employee.setPassword(encodedPassword);
+            });
+            employeeRepository.saveAll(list);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public ByteArrayInputStream getExcelSheet() throws IOException {
+        List<Employee> all=employeeRepository.findAll();
+        return ExcelHelper.convertListToExcel(all);
+
     }
 }
