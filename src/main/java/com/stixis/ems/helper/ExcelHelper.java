@@ -22,6 +22,7 @@ import java.util.List;
 
 public class ExcelHelper {
 
+
    public static String[] HEADERS={"employeeId","firstName","lastName","email","password","mobileNumber","dateOfbirth","dateOfJoining","department","role"};
 
    public static String SHEET_NAME="employee_data";
@@ -67,18 +68,15 @@ public class ExcelHelper {
                             employee.setEmail(cell.getStringCellValue());
                             break;
                         case 3:
-                            employee.setPassword(cell.getStringCellValue());
-                            break;
-                        case 4:
                             employee.setMobileNumber((long)cell.getNumericCellValue());
                             break;
-                        case 5:
+                        case 4:
                             employee.setDateOfBirth(LocalDate.from(cell.getLocalDateTimeCellValue()));
                             break;
-                        case 6:
+                        case 5:
                             employee.setDateOfJoining(LocalDate.from(cell.getLocalDateTimeCellValue()));
                             break;
-                        case 7:
+                        case 6:
                             employee.setDepartment(departmentRepository.findById((long)cell.getNumericCellValue()).get());
                         default:break;
                     }

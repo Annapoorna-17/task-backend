@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -20,7 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Data
 @Builder
 @Entity
-public class Employee implements UserDetails {
+public class Employee implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

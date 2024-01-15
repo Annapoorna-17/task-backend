@@ -9,6 +9,7 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -94,6 +95,7 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    @CacheEvict(value="employees",allEntries = true)
     public ResponseEntity<?> logout(){
        return ResponseEntity.ok("Logged out Successfully!!");
     }

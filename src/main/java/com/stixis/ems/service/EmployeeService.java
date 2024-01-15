@@ -5,9 +5,15 @@ import com.stixis.ems.helper.ExcelHelper;
 import com.stixis.ems.model.Employee;
 import com.stixis.ems.repository.DepartmentRepository;
 import com.stixis.ems.repository.EmployeeRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +41,9 @@ public class EmployeeService {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    JavaMailSender mailSender;
 
     public EmployeeService(EmployeeRepository employeeRepository,TokenRepository tokenRepository) {
         this.employeeRepository = employeeRepository;
@@ -141,6 +150,7 @@ public class EmployeeService {
      *
      * @return List of all employees.
      */
+    @Cacheable("employees")
     public List<Employee> getAllEmployees() {
         try {
             List<Employee> employees = employeeRepository.findAll();
@@ -161,6 +171,7 @@ public class EmployeeService {
      * @param employee The employee to be updated.
      * @return The updated employee.
      */
+    @CacheEvict(value="employees" ,allEntries=true)
     public Employee updateEmployee(Employee employee) {
         try {
             Employee e1 = findEmployeeById(employee.getEmployeeId());
@@ -181,6 +192,7 @@ public class EmployeeService {
      * @return The deleted employee.
      */
     @Transactional
+    @CacheEvict(value="employees" ,allEntries=true)
     public Employee deleleEmployee(Long id) {
         try {
             Employee deleted = findEmployeeById(id);
@@ -225,18 +237,55 @@ public class EmployeeService {
         }
     }
 
+    @CacheEvict(value="employees",allEntries = true)
     public void save(MultipartFile file) {
         try{
+
             List<Employee> list = ExcelHelper.convertExcelToList(file.getInputStream(),departmentRepository);
             list.forEach(employee -> {
-                String encodedPassword= passwordEncoder.encode(employee.getPassword());
+                String userPassword;
+                userPassword = "!"+employee.getFirstName().toUpperCase()+"@"+employee.getDateOfBirth().getYear()+"$";
+                String encodedPassword= passwordEncoder.encode(userPassword);
                 employee.setPassword(encodedPassword);
+                String loginLink = "http://localhost:4200/login";
+                String emailContent = createWelcomeMessageContent(employee, loginLink);
+                try {
+                    sendRegisterEmail(employee.getEmail(), emailContent);
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
             });
             employeeRepository.saveAll(list);
         }
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    private static String createWelcomeMessageContent(Employee employee, String loginLink) {
+        return "<p> Hi " + employee.getFirstName() + " " + employee.getLastName() + "</p>" +
+                "<p>Thank you for registering with us, we look forward to provide you the best service." +
+                "<br> Your User id is : "+employee.getEmployeeId() +"<br>"+
+                "Please find your Username and Password to use our portal. <br>" +
+                "Username : " + employee.getUsername() + "<br>" + "Password : " +"!(Your First name in caps)@(Your Birth Year)$"  + "<br>" +
+                "<p><b>Note :-<b>It is recommended to reset you password after logging in the first time.</p>"+
+                "<p>To Login in our website, click on the link below:</p><br>"+
+                "<a href=\"" +
+                loginLink + "\"> Login link</a>" +
+                "<p>Thank you,<br> Stixis Technologies</p>";
+    }
+
+    private void sendRegisterEmail(String email, String emailContent) throws MessagingException {
+        MimeMessage mailMessage = mailSender.createMimeMessage();
+        MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
+        messageHelper.setFrom("r.arunachalam99@gmail.com");
+        messageHelper.setSubject("Welcome to Stixis Employee Management System!!");
+        messageHelper.setText(emailContent, true);
+        messageHelper.setTo(email);
+
+        mailSender.send(mailMessage);
+
+
     }
 
     public ByteArrayInputStream getExcelSheet() throws IOException {
