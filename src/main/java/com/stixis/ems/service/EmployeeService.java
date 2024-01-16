@@ -247,20 +247,30 @@ public class EmployeeService {
                 userPassword = "!"+employee.getFirstName().toUpperCase()+"@"+employee.getDateOfBirth().getYear()+"$";
                 String encodedPassword= passwordEncoder.encode(userPassword);
                 employee.setPassword(encodedPassword);
-                String loginLink = "http://localhost:4200/login";
-                String emailContent = createWelcomeMessageContent(employee, loginLink);
-                try {
-                    sendRegisterEmail(employee.getEmail(), emailContent);
-                } catch (MessagingException e) {
-                    throw new RuntimeException(e);
-                }
             });
+            sendWelcomeMailToImportedEmployees(list);
             employeeRepository.saveAll(list);
         }
         catch(Exception e){
             e.printStackTrace();
         }
     }
+
+    private void sendWelcomeMailToImportedEmployees(List<Employee> list) {
+        String loginLink = "http://localhost:4200/login";
+        list.forEach(employee->{
+//            String emailContent = createWelcomeMessageContent(employee, loginLink);
+//            try {
+//                sendRegisterEmail(employee.getEmail(), emailContent);
+//            } catch (MessagingException e) {
+//                throw new RuntimeException(e);
+//            }
+            System.out.println("mail sent to -"+employee.getEmail());
+
+        });
+
+    }
+
 
     private static String createWelcomeMessageContent(Employee employee, String loginLink) {
         return "<p> Hi " + employee.getFirstName() + " " + employee.getLastName() + "</p>" +

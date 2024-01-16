@@ -77,6 +77,7 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws MessagingException, DuplicateEmailException {
         String loginLink = "http://localhost:4200/login";
         Employee e = userService.register(request);
+        e.setPassword(request.getPassword());
         String emailContent = createWelcomeMessageContent(e, loginLink);
         sendRegisterEmail(e.getEmail(), emailContent);
         return ResponseEntity.ok(e);
@@ -97,7 +98,9 @@ public class AuthController {
     @PostMapping("/logout")
     @CacheEvict(value="employees",allEntries = true)
     public ResponseEntity<?> logout(){
-       return ResponseEntity.ok("Logged out Successfully!!");
+
+        System.out.println("inside logout");
+        return ResponseEntity.ok("Logged out Successfully!!");
     }
 
     @PostMapping("/refreshToken")
@@ -170,10 +173,9 @@ public class AuthController {
         MimeMessage mailMessage = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
         messageHelper.setFrom("r.arunachalam99@gmail.com");
-        messageHelper.setSubject("Wlcome to Stixis Employee Management System!!");
+        messageHelper.setSubject("Welcome to Stixis Employee Management System!!");
         messageHelper.setText(emailContent, true);
         messageHelper.setTo(email);
-
         mailSender.send(mailMessage);
 
 

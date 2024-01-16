@@ -15,6 +15,7 @@ import com.stixis.ems.web.resetPasswordRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -95,6 +96,7 @@ public class AuthService implements IAuthService{
     }
 
     @Override
+    @CachePut(value="employees")
     public Employee register(RegisterRequest request) {
 
         Employee user = createUser(request);
