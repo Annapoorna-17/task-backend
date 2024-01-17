@@ -114,18 +114,17 @@ public class ExcelHelper {
                 dataRow.createCell(1).setCellValue(e.getFirstName());
                 dataRow.createCell(2).setCellValue(e.getLastName());
                 dataRow.createCell(3).setCellValue(e.getEmail());
-                dataRow.createCell(4).setCellValue(e.getPassword());
-                dataRow.createCell(5).setCellValue(e.getMobileNumber());
-                dataRow.createCell(6).setCellValue(e.getDateOfBirth());
-                dataRow.createCell(7).setCellValue(e.getDateOfJoining());
+                dataRow.createCell(4).setCellValue(e.getMobileNumber());
+                dataRow.createCell(5).setCellValue(e.getDateOfBirth());
+                dataRow.createCell(6).setCellValue(e.getDateOfJoining());
                 if(e.getDepartment()!=null&&e.getDepartment().getDepartmentId()!=null){
-                    dataRow.createCell(8).setCellValue(e.getDepartment().getDepartmentId());
+                    dataRow.createCell(7).setCellValue(e.getDepartment().getDepartmentId());
 
                 }else{
-                    dataRow.createCell(8).setCellValue("");
+                    dataRow.createCell(7).setCellValue("");
 
                 }
-                dataRow.createCell(9).setCellValue(e.getRole().name());
+                dataRow.createCell(8).setCellValue(e.getRole().name());
             }
             workbook.write(out);
             return new ByteArrayInputStream(out.toByteArray());

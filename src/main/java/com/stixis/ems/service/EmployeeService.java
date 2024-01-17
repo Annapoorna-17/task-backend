@@ -1,8 +1,10 @@
 package com.stixis.ems.service;
 
 import com.stixis.ems.dao.TokenRepository;
+import com.stixis.ems.exceptions.DuplicateEmailException;
 import com.stixis.ems.helper.ExcelHelper;
 import com.stixis.ems.model.Employee;
+import com.stixis.ems.model.Role;
 import com.stixis.ems.repository.DepartmentRepository;
 import com.stixis.ems.repository.EmployeeRepository;
 import jakarta.mail.MessagingException;
@@ -58,9 +60,17 @@ public class EmployeeService {
      * @param employee The employee to be added.
      * @return The added employee.
      */
+    @CacheEvict(value="employees",allEntries = true)
     public Employee addEmployee(Employee employee) {
         try {
-            return employeeRepository.save(employee);
+            if(employeeRepository.findByEmail(employee.getEmail())==null){
+
+                employee.setPassword(passwordEncoder.encode(employee.getPassword()));
+                employee.setRole(Role.USER);
+                return employeeRepository.save(employee);
+            }
+            else throw new DuplicateEmailException("Employee with email already Exists");
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Failed to add employee", e);

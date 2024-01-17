@@ -33,16 +33,16 @@ public class EmployeeController {
 
 
     // Endpoint to register a new employee
-//    @PostMapping("/employee")
-//    public ResponseEntity<Employee> employeeRegister(@RequestBody Employee employee) {
-//        try {
-//            Employee savedEmployee = employeeService.addEmployee(employee);
-//            return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            // Handle exceptions and return an appropriate HTTP status
-//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
+    @PostMapping("/employee/addEmployee")
+    public ResponseEntity<Employee> employeeRegister(@RequestBody Employee employee) {
+        try {
+            Employee savedEmployee = employeeService.addEmployee(employee);
+            return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+        } catch (Exception e) {
+            // Handle exceptions and return an appropriate HTTP status
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     // Endpoint to retrieve all employees
     @GetMapping("/employee")
