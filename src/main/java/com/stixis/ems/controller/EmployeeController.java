@@ -56,6 +56,7 @@ public class EmployeeController {
         }
     }
 
+    // Endpoint to get list of employees based on department Id
     @GetMapping("/employee/department/{id}")
     public ResponseEntity<List<Employee>> getAllEmployeesByDepartment(@PathVariable Long id) {
         try {
@@ -164,6 +165,7 @@ public class EmployeeController {
         }
     }
 
+   // Endpoint to upload Excel sheet containing bulk Employee Data.
     @PostMapping("/employee/upload")
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file){
         if(ExcelHelper.checkExcelFormat(file)){
@@ -180,6 +182,7 @@ public class EmployeeController {
 //        return this.employeeService.getAllEmployees();
 //    }
 
+    //Endpoint to download Employee data in Excel format.
     @RequestMapping("/employee/excel")
     public ResponseEntity<Resource> downloadExcelSheet() throws IOException {
         String fileName ="employeesData.xlsx";

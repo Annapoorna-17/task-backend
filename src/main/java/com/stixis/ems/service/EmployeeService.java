@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -247,11 +248,17 @@ public class EmployeeService {
         }
     }
 
+    /**
+     * Gets the file via Rest Api and converts them to list.
+     *
+     * @param file The Excel file of employees.
+     */
     @CacheEvict(value="employees",allEntries = true)
     public void save(MultipartFile file) {
         try{
 
             List<Employee> list = ExcelHelper.convertExcelToList(file.getInputStream(),departmentRepository);
+            removeDuplicatesFromList(list);
             list.forEach(employee -> {
                 String userPassword;
                 userPassword = "!"+employee.getFirstName().toUpperCase()+"@"+employee.getDateOfBirth().getYear()+"$";
@@ -266,6 +273,29 @@ public class EmployeeService {
         }
     }
 
+
+    /**
+     * Remove duplicates from the list based on email.
+     *
+     * @param list The list of employees.
+     */
+    private void removeDuplicatesFromList(List<Employee> list) {
+        Iterator<Employee> iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Employee employee = iterator.next();
+            // Check if the employee already exists in the database using the repository
+            if (employeeRepository.existsByEmail(employee.getEmail())) {
+                // Remove the duplicate employee from the list
+                iterator.remove();
+            }
+        }
+    }
+
+    /**
+     * Send welcome emails to imported employees.
+     *
+     * @param list The list of employees.
+     */
     private void sendWelcomeMailToImportedEmployees(List<Employee> list) {
         String loginLink = "http://localhost:4200/login";
         list.forEach(employee->{
@@ -295,6 +325,11 @@ public class EmployeeService {
                 "<p>Thank you,<br> Stixis Technologies</p>";
     }
 
+    /**
+     * Send welcome emails to imported employees.
+     *
+     * @param email of employee and Email content.
+     */
     private void sendRegisterEmail(String email, String emailContent) throws MessagingException {
         MimeMessage mailMessage = mailSender.createMimeMessage();
         MimeMessageHelper messageHelper = new MimeMessageHelper(mailMessage);
@@ -308,6 +343,12 @@ public class EmployeeService {
 
     }
 
+    /**
+     * Get an Excel sheet of all employees.
+     *
+     * @return ByteArrayInputStream representing the Excel sheet.
+     * @throws IOException If an I/O error occurs.
+     */
     public ByteArrayInputStream getExcelSheet() throws IOException {
         List<Employee> all=employeeRepository.findAll();
         return ExcelHelper.convertListToExcel(all);

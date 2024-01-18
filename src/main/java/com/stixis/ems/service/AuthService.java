@@ -160,6 +160,7 @@ public class AuthService implements IAuthService{
                     saveUserToken(user,newToken);
 
                     AuthResponse authResponse= new AuthResponse();
+                    authResponse.setName(user.getFirstName());
                     authResponse.setAccessToken(newToken);
                     authResponse.setRefreshToken(refreshToken);
 

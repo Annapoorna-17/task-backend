@@ -15,6 +15,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     @Query("SELECT e FROM Employee e")
     List<Employee> findAll();
+
     // Find an employee by email
     Employee findByEmail(String email);
 
@@ -33,5 +34,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // Find all employees by date of joining between two dates
     List<Employee> findAllByDateOfJoiningBetween(LocalDate startDate, LocalDate endDate);
+
+    // Check Existence of Employee in DB using Email ID.
+    boolean existsByEmail(String email);
 
 }
