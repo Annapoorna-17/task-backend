@@ -1,7 +1,7 @@
 package com.stixis.ems.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +15,8 @@ import java.util.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -56,16 +58,17 @@ public class Employee implements UserDetails, Serializable {
         }
     }
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "MM/dd/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate dateOfBirth;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING,pattern = "MM/dd/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
     private LocalDate dateOfJoining;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "employee" ,fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "employee", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Token> tokens;
 
     @ManyToOne
@@ -74,7 +77,7 @@ public class Employee implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return Arrays.asList(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
@@ -118,6 +121,19 @@ public class Employee implements UserDetails, Serializable {
                 ", tokens=" + tokens +
                 ", department=" + department +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Employee other = (Employee) obj;
+        return Objects.equals(employeeId, other.employeeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeId);
     }
 
 //    @Override

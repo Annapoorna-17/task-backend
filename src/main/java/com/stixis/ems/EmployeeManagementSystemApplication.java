@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 
 @SpringBootApplication
-@EnableCaching
+//@EnableCaching
 public class EmployeeManagementSystemApplication {
 
     public static void main(String[] args) {
