@@ -24,10 +24,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByRole(Role role);
 
     // Find an employee by first name
-    Optional<Employee> findByFirstName(String firstName);
+    List<Employee> findAllByFirstName(String firstName);
 
     // Find an employee by last name
-    Optional<Employee> findByLastName(String lastName);
+    List<Employee> findAllByLastName(String lastName);
 
     // Find all employees by date of joining
     List<Employee> findAllByDateOfJoining(LocalDate date);

@@ -8,6 +8,7 @@ import com.stixis.ems.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -82,9 +83,9 @@ public class EmployeeController {
 
     // Endpoint to retrieve an employee by first name
     @GetMapping("/employee/firstname/{firstName}")
-    public ResponseEntity<Employee> getEmployeeByFirstName(@PathVariable String firstName) {
+    public ResponseEntity<List<Employee>> getEmployeeByFirstName(@PathVariable String firstName) {
         try {
-            Employee e = employeeService.findEmployeeByFirstName(firstName);
+            List<Employee> e = employeeService.findEmployeeByFirstName(firstName);
             return new ResponseEntity<>(e, HttpStatus.OK);
         } catch (Exception e) {
             // Handle exceptions and return an appropriate HTTP status
@@ -94,9 +95,9 @@ public class EmployeeController {
 
     // Endpoint to retrieve an employee by last name
     @GetMapping("/employee/lastname/{lastName}")
-    public ResponseEntity<Employee> getEmployeeByLastName(@PathVariable String lastName) {
+    public ResponseEntity<List<Employee>> getEmployeeByLastName(@PathVariable String lastName) {
         try {
-            Employee e = employeeService.findEmployeeByLastName(lastName);
+           List<Employee> e = employeeService.findEmployeeByLastName(lastName);
             return new ResponseEntity<>(e, HttpStatus.OK);
         } catch (Exception e) {
             // Handle exceptions and return an appropriate HTTP status
@@ -142,7 +143,7 @@ public class EmployeeController {
 
     // Endpoint to retrieve employees by date of joining
     @GetMapping("/employee/date-of-joining/{date}")
-    public ResponseEntity<List<Employee>> findByDateOfJoining(@PathVariable LocalDate date) {
+    public ResponseEntity<List<Employee>> findByDateOfJoining(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         try {
             List<Employee> employees = employeeService.findAllByDateOfJoining(date);
             return new ResponseEntity<>(employees, HttpStatus.OK);
@@ -155,7 +156,8 @@ public class EmployeeController {
     // Endpoint to retrieve employees by date of joining between two dates
     @GetMapping("/employee/date-of-joining-between/{startDate}/{endDate}")
     public ResponseEntity<List<Employee>> findAllByDateOfJoiningBetween(
-            @PathVariable LocalDate startDate, @PathVariable LocalDate endDate) {
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
         try {
             List<Employee> employees = employeeService.findAllByDateOfJoiningBetween(startDate, endDate);
             return new ResponseEntity<>(employees, HttpStatus.OK);
@@ -170,7 +172,7 @@ public class EmployeeController {
     public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file){
         if(ExcelHelper.checkExcelFormat(file)){
             this.employeeService.save(file);
-            return ResponseEntity.ok(Map.of("message","File is uploaded and the data is stored in Database"));
+            return ResponseEntity.ok("message"+"File is uploaded and the data is stored in Database");
 
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please Upload Excel File only");

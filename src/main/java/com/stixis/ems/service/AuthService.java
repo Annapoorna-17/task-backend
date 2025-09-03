@@ -12,8 +12,8 @@ import com.stixis.ems.web.AutRequest;
 import com.stixis.ems.web.AuthResponse;
 import com.stixis.ems.web.RegisterRequest;
 import com.stixis.ems.web.resetPasswordRequest;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -31,18 +31,17 @@ import java.util.Set;
 @Service
 public class AuthService implements IAuthService{
     @Autowired
-    EmployeeRepository userDao;
+    private  EmployeeRepository userDao;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private  PasswordEncoder passwordEncoder;
+    @Autowired
+    private  JwtUtil jwtUtil;
+    @Autowired
+    private  TokenRepository tokenDao;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    JwtUtil jwtUtil;
 
-    @Autowired
-    TokenRepository tokenDao;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     @Override
     public Employee getUserByEmail(String email) {
@@ -96,7 +95,7 @@ public class AuthService implements IAuthService{
     }
 
     @Override
-    @CachePut(value="employees")
+//    @CachePut(value="employees")
     public Employee register(RegisterRequest request) {
 
         Employee user = createUser(request);

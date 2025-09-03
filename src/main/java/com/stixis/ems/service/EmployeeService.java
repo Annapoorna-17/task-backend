@@ -7,20 +7,24 @@ import com.stixis.ems.model.Employee;
 import com.stixis.ems.model.Role;
 import com.stixis.ems.repository.DepartmentRepository;
 import com.stixis.ems.repository.EmployeeRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.transaction.Transactional;
+
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -61,7 +65,7 @@ public class EmployeeService {
      * @param employee The employee to be added.
      * @return The added employee.
      */
-    @CacheEvict(value="employees",allEntries = true)
+//    @CacheEvict(value="employees",allEntries = true)
     public Employee addEmployee(Employee employee) {
         try {
             if(employeeRepository.findByEmail(employee.getEmail())==null){
@@ -81,12 +85,13 @@ public class EmployeeService {
     /**
      * Get an employee by ID.
      *
-     * @param id The ID of the employee to retrieve.
+     * @param employeeId The ID of the employee to retrieve.
      * @return The employee with the specified ID.
      */
-    public Employee findEmployeeById(Long id) {
+//   @CachePut(value="employees",key="#employeeId")
+    public Employee findEmployeeById(Long employeeId) {
         try {
-            Optional<Employee> employee = employeeRepository.findById(id);
+            Optional<Employee> employee = employeeRepository.findById(employeeId);
             return employee.orElse(null);
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve employee by ID", e);
@@ -118,10 +123,10 @@ public class EmployeeService {
      * @param firstName The first name of the employee to retrieve.
      * @return The employee with the specified first name.
      */
-    public Employee findEmployeeByFirstName(String firstName) {
+    public List<Employee> findEmployeeByFirstName(String firstName) {
         try {
-            Optional<Employee> employee = employeeRepository.findByFirstName(firstName);
-            return employee.orElse(null);
+            List<Employee> employeeList = employeeRepository.findAllByFirstName(firstName);
+            return employeeList;
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve employee by first name", e);
         }
@@ -133,10 +138,10 @@ public class EmployeeService {
      * @param lastName The last name of the employee to retrieve.
      * @return The employee with the specified last name.
      */
-    public Employee findEmployeeByLastName(String lastName) {
+    public List<Employee> findEmployeeByLastName(String lastName) {
         try {
-            Optional<Employee> employee = employeeRepository.findByLastName(lastName);
-            return employee.orElse(null);
+            List<Employee> employeeList = employeeRepository.findAllByLastName(lastName);
+            return employeeList;
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve employee by last name", e);
         }
@@ -161,7 +166,7 @@ public class EmployeeService {
      *
      * @return List of all employees.
      */
-    @Cacheable("employees")
+//    @Cacheable(value = "employees")
     public List<Employee> getAllEmployees() {
         try {
             List<Employee> employees = employeeRepository.findAll();
@@ -175,6 +180,19 @@ public class EmployeeService {
             throw new RuntimeException("Failed to retrieve all employees", e);
         }
     }
+//    @Bean
+//    public KeyGenerator customKeyGenerator() {
+//        return (target, method, params) -> {
+//            StringBuilder key = new StringBuilder();
+//            key.append("employee:");
+//            for (Object param : params) {
+//                if (param instanceof Employee) {
+//                    key.append(((Employee) param).getEmployeeId()).append(":");
+//                }
+//            }
+//            return key.toString();
+//        };
+//    }
 
     /**
      * Update an existing employee.
@@ -182,7 +200,7 @@ public class EmployeeService {
      * @param employee The employee to be updated.
      * @return The updated employee.
      */
-    @CacheEvict(value="employees" ,allEntries=true)
+//    @CacheEvict(value="employees" ,allEntries=true)
     public Employee updateEmployee(Employee employee) {
         try {
             Employee e1 = findEmployeeById(employee.getEmployeeId());
@@ -203,7 +221,7 @@ public class EmployeeService {
      * @return The deleted employee.
      */
     @Transactional
-    @CacheEvict(value="employees" ,allEntries=true)
+//    @CacheEvict(value="employees" ,allEntries=true)
     public Employee deleleEmployee(Long id) {
         try {
             Employee deleted = findEmployeeById(id);
@@ -251,9 +269,10 @@ public class EmployeeService {
     /**
      * Gets the file via Rest Api and converts them to list.
      *
-     * @param file The Excel file of employees.
+     * @param file The Excel file
+     *            of employees.
      */
-    @CacheEvict(value="employees",allEntries = true)
+//    @CacheEvict(value="employees",allEntries = true)
     public void save(MultipartFile file) {
         try{
 

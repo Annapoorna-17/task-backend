@@ -21,11 +21,6 @@ import java.util.function.Function;
 @Component
 public class JwtUtil{
 
-	@Autowired
-	AuthService userService;
-
-	@Autowired
-	TokenRepository tokenDao;
 	private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 	private static final long EXPIRATION_TIME_MS = 900000;
 	private static final long REFRESH_TOKEN_EXPIRATION_TIME_MS = 604800000;

@@ -5,12 +5,16 @@ package com.stixis.ems.security;
 import com.stixis.ems.dao.TokenRepository;
 import com.stixis.ems.model.Token;
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,14 +25,15 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 @Component
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Lazy
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private JwtUtil jwtUtil;
-
-	@Autowired
 	private TokenRepository tokenDao;
+	@Autowired
+	private JwtUtil jwtUtil;
 	@Autowired
 	private MyUserDetailsService userDetailsService;
 
@@ -40,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		final String jwtToken;
 		final String username;
 
-		if(authorizationHeader!= null && authorizationHeader.startsWith("Bearer ")){
+		if(authorizationHeader!= null && (authorizationHeader.startsWith("Bearer ") || authorizationHeader.matches("^Bearer eyJ.*$"))){
 			jwtToken = authorizationHeader.substring(7);
 			Token token = tokenDao.findByToken(jwtToken);
 			try{

@@ -1,5 +1,6 @@
 package com.stixis.ems.helper;
 
+import com.stixis.ems.exceptions.InvalidFileFormatException;
 import com.stixis.ems.model.Employee;
 import com.stixis.ems.model.Role;
 import com.stixis.ems.repository.DepartmentRepository;
@@ -23,7 +24,8 @@ import java.util.List;
 public class ExcelHelper {
 
 
-   public static String[] HEADERS={"employeeId","firstName","lastName","email","password","mobileNumber","dateOfbirth","dateOfJoining","department","role"};
+   public static String[] OUTPUTHEADERS={"employeeId","firstName","lastName","email","mobileNumber","dateOfbirth","dateOfJoining","department","role"};
+   public static String[] INPUTHEADERS={"firstName","lastName","email","mobileNumber","dateOfbirth","dateOfJoining","department",};
 
    public static String SHEET_NAME="employee_data";
 
@@ -48,6 +50,25 @@ public class ExcelHelper {
             while(iterator.hasNext()){
                 Row row = iterator.next();
                 if(rowNumber==0){
+                    Iterator<Cell> headerCells= row.iterator();
+                    int hid =0;
+                    boolean validHeaders = true;
+                    while (headerCells.hasNext() && hid < INPUTHEADERS.length) {
+                        Cell cell = headerCells.next();
+
+                        // Check if the header matches the expected header
+                        if (!cell.getStringCellValue().equals(INPUTHEADERS[hid])) {
+                            validHeaders = false;
+                            break;
+                        }
+
+                        hid++;
+                    }
+
+                    if (!validHeaders || hid < INPUTHEADERS.length) {
+                        // Handle the case where headers are invalid or missing
+                        throw new InvalidFileFormatException("Invalid or missing headers in the file.");
+                    }
                     rowNumber++;
                     continue;
                 }
@@ -101,9 +122,9 @@ public class ExcelHelper {
             Sheet sheet = workbook.createSheet(SHEET_NAME);
             //CREATE HEADER
             Row row = sheet.createRow(0);
-            for(int i=0;i<HEADERS.length;i++){
+            for(int i=0;i<OUTPUTHEADERS.length;i++){
                 Cell cell = row.createCell(i);
-                cell.setCellValue(HEADERS[i]);
+                cell.setCellValue(OUTPUTHEADERS[i]);
             }
             //VALUE ROWS
             int rowNumber=1;
